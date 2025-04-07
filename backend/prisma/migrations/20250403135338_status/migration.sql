@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "reserva" ALTER COLUMN "status" SET DEFAULT 'CONFIRMADA';

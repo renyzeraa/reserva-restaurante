@@ -1,0 +1,35 @@
+{
+  "name": "reserva-restaurante-api",
+  "version": "0.1.0",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts prisma/seed.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "author": "Renan Leandro da Silva",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cookie": "^9.3.1",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/jwt": "8.0.1",
+    "@prisma/client": "^5.17.0",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.28.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/fastify-cors": "^2.1.0",
+    "@types/node": "^20.14.12",
+    "nodemon": "^3.1.4",
+    "prisma": "^5.17.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
+  }
+}

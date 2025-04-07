@@ -1,0 +1,34 @@
+node_modules
+backup
+
+*.jpg
+*.png
+**/*.jpg
+**/*.png
+
+*.db
+**/*.db
+src/database/database.db
+**/database.db
+
+# Ignore node_modules
+node_modules/
+
+# Ignore environment variable files
+.env
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+
+# Ignore database files
+*.db
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore built files (optional)
+dist/
+build/
