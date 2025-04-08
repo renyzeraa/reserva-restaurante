@@ -1,14 +1,4 @@
-# Api de reserva de mesas para Restaurante 📝🥗
-
-Sistema de reserva para um único restaurante que possui 15 mesas.
-
-## Contem
-
-- O sistema deverá apresentar um sistema de login.
-- Reservas serão permitidas apenas das 18:00 até as 23:59, com exceção aos domingos.
-- Deverá haver validações para evitar que reservas possuam horários conflituosos.
-- O banco de dados deverá ser relacional.
-- O banco deverá ser populado para fins de testes.
+# Backend
 
 ## Para rodar a aplicação localmente
 
@@ -43,5 +33,7 @@ npm run seed
 ```bash
 npx prisma studio
 ```
+
+6. Caso deseja apenas testar as rotas com requisições pelo Postman, na raiz deste projeto possui o arquivo ''reserva-restaurante-collection.json'' onde contem toda collection necessaria.
 
 Obs: Localmente o banco roda no localhost:3333, o docker no localhost:5432, se atende para que antes de rodar o projeto, essas portas estejam livres.
