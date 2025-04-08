@@ -66,7 +66,7 @@
           <div class="text-center mt-3">
             <p>
               {{ isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?' }}
-              <a href="#" @click.prevent="toggleForm">
+              <a href="#" class="btn-login" @click.prevent="toggleForm">
                 {{ isLogin ? 'Criar Conta' : 'Login' }}
               </a>
             </p>
@@ -117,20 +117,28 @@ export default {
           : { nome: this.nome, email: this.email, senha: this.password }
 
         const response = await api.post(endpoint, payload)
-        const { user, token } = response.data
-        // Salvar o token nos cookies
-        if (token) {
-          auth.setToken(token)
+        if(this.isLogin) {
+          const { user, token } = response.data
+          // Salvar o token nos cookies
+          if (token) {
+            auth.setToken(token)
+          }
+          if (user) {
+            auth.setUser(user)
+          }
+          toast("Login realizado com sucesso", {
+            type: "success"
+          })
+          this.$router.push({ name: 'home' });
         }
-        if (user) {
-          auth.setUser(user)
+        else {
+          toast("Conta criada, agora realize o login", {
+            type: "info"
+          })
+          document.querySelector('.btn-login').click()
         }
-        this.$router.push({ name: 'home' });
-        toast("Login realizado com sucesso", {
-          type: "success"
-        })
       } catch (error) {
-        //console.error(error.response)
+        console.error(error.response)
         if (error.response.data.errors) {
           error.response.data.errors.forEach(error => {
             console.error(error.message)

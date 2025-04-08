@@ -16,7 +16,7 @@ const commonFields = {
   senha: z.string().nonempty("Senha é obrigatória").min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
   tipo: z.enum(["NORMAL"]).refine(value => value === CONST.TIPO_USUARIO.NORMAL, {
     message: "Tipo de Usuário incorreto",
-  }),
+  }).optional(),
 }
 
 export const createUsuarioSchema = z.object({
