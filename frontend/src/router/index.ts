@@ -28,16 +28,26 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, _, next) => {
+  const authStore = useAuthStore()
+  // Isso aqui esta errado, deve ter uma rota na api para verificar o token de fato, mas vai ficar assim por enquanto
+
   if (to?.meta?.auth) {
-    const authStore = useAuthStore()
-    // Isso aqui esta errado, deve ter uma rota na api para verificar o token de fato, mas vai ficar assim por enquanto
-    const hasTokenUser = authStore.token && authStore.user
-    if (hasTokenUser) {
+    const { valid } = await authStore.validateToken()
+    if (valid) {
       next()
     }
     else {
       next({ name: 'login' })
+    }
+  }
+  else if (to.name === 'login') {
+    const { valid } = await authStore.validateToken()
+    if (valid) {
+      next({ name: 'home' })
+    }
+    else {
+      next()
     }
   }
   else {

@@ -1,71 +1,77 @@
 <template>
+
   <div
-    class="bg-dark d-flex"
+    class="bg-dark vh-100"
   >
-    <h1 class="mx-auto align-items-center d-flex text-white text-center">
-      Reserva Restaurante 🥗
-    </h1>
-    <div
-      class="card border-0 shadow-lg p-4 w-100 h-100 d-flex flex-column justify-content-center rounded-0"
-      style="max-width: 500px; min-height: 90vh;"
-    >
-      <h2 class="text-center mb-4">
-        {{ isLogin ? 'Login' : 'Criar Conta' }}
-      </h2>
+    <div class="d-flex flex-wrap h-100">
+      <div class="col-12 col-md-7 p-0 d-none d-md-block">
+        <img class="img-fluid h-100 w-100 position-absolute
+        " lazyload src="../assets/mesas.jpg" alt="Imagem de mesas de um restaurante">
+      </div>
+      <div class="col-12 col-md-5 d-flex align-items-center justify-content-center">
+        <div
+          class="login-content card border-0 shadow-lg p-4 w-100"
+          style="max-width: 500px;"
+        >
+          <h2 class="text-center mb-4">
+            {{ isLogin ? 'Login' : 'Criar Conta' }}
+          </h2>
 
-      <form @submit.prevent="handleSubmit">
-        <transition name="fade" mode="out-in">
-          <div :key="isLogin" class="form-section">
-            <div v-if="!isLogin" class="mb-3">
-              <label class="form-label">Nome</label>
-              <input type="text" class="form-control" v-model="nome" required />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                v-model="email"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Senha</label>
-              <input
-                type="password"
-                class="form-control"
-                v-model="password"
-                required
-              />
-            </div>
-            <div v-if="!isLogin" class="mb-3">
-              <label class="form-label">Confirmar Senha</label>
-              <input
-                type="password"
-                class="form-control"
-                v-model="confirmPassword"
-                @input="validatePasswords"
-                required
-              />
-              <small v-if="passwordMismatch" class="text-danger">
-                As senhas não coincidem.
-              </small>
-            </div>
+          <form @submit.prevent="handleSubmit">
+            <transition name="fade" mode="out-in">
+              <div :key="isLogin" class="form-section">
+                <div v-if="!isLogin" class="mb-3">
+                  <label class="form-label">Nome</label>
+                  <input type="text" class="form-control" v-model="nome" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    v-model="email"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Senha</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    v-model="password"
+                    required
+                  />
+                </div>
+                <div v-if="!isLogin" class="mb-3">
+                  <label class="form-label">Confirmar Senha</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    v-model="confirmPassword"
+                    @input="validatePasswords"
+                    required
+                  />
+                  <small v-if="passwordMismatch" class="text-danger">
+                    As senhas não coincidem.
+                  </small>
+                </div>
+              </div>
+            </transition>
+
+            <button type="submit" class="btn btn-primary w-100">
+              {{ isLogin ? 'Entrar' : 'Criar Conta' }}
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <p>
+              {{ isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?' }}
+              <a href="#" @click.prevent="toggleForm">
+                {{ isLogin ? 'Criar Conta' : 'Login' }}
+              </a>
+            </p>
           </div>
-        </transition>
-
-        <button type="submit" class="btn btn-primary w-100">
-          {{ isLogin ? 'Entrar' : 'Criar Conta' }}
-        </button>
-      </form>
-
-      <div class="text-center mt-3">
-        <p>
-          {{ isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?' }}
-          <a href="#" @click.prevent="toggleForm">
-            {{ isLogin ? 'Criar Conta' : 'Login' }}
-          </a>
-        </p>
+        </div>
       </div>
     </div>
   </div>
@@ -73,8 +79,8 @@
 
 <script>
 import api from '@/services/api'
-import Cookies from 'js-cookie';
 import { useAuthStore } from '../stores/auth.ts'
+import { toast } from 'vue3-toastify'
 
 const auth = useAuthStore()
 
@@ -97,7 +103,10 @@ export default {
     },
     async handleSubmit() {
       if (!this.isLogin && this.passwordMismatch) {
-        console.error('As senhas não coincidem!')
+        toast("As senhas não coincidem!", {
+          type: "error",
+          autoClose: 1000,
+        })
         return
       }
 
@@ -117,13 +126,22 @@ export default {
           auth.setUser(user)
         }
         this.$router.push({ name: 'home' });
+        toast("Login realizado com sucesso", {
+          type: "success"
+        })
       } catch (error) {
-        console.error(error.response)
+        //console.error(error.response)
         if (error.response.data.errors) {
           error.response.data.errors.forEach(error => {
             console.error(error.message)
+            toast(error.message, {
+              type: "error"
+            })
           })
         } else {
+          toast(error.response.data.message, {
+            type: "error"
+          })
           console.error(error.response.data.message)
         }
       }
@@ -142,7 +160,12 @@ export default {
   opacity: 0;
 }
 
-.menu-nav {
-  display: none;
+@media (max-width: 900px) {
+  h1 {
+    display: none !important;
+  }
+  .login-content {
+    max-width: 100vw !important;
+  }
 }
 </style>

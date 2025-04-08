@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Cookies from 'js-cookie';
+import api from '../services/api';
 
 interface User {
   admin: boolean;
@@ -29,11 +30,38 @@ export const useAuthStore = defineStore('auth', () => {
     Cookies.remove('user');
   }
 
+  async function validateToken() {
+    if (!token.value) {
+      return false; // Retorna falso se não houver token
+    }
+    return api
+      .get('/token/validate', {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        // Token inválido
+        console.error('Erro ao validar token:', error);
+        clearAuth(); // Limpa a autenticação se o token for inválido
+        return false;
+      });
+  }
+
+  const isAuthenticated = computed(() => {
+    return token.value && user.value;
+  })
+
   return {
     token,
     user,
     setToken,
     setUser,
     clearAuth,
+    validateToken,
+    isAuthenticated
   };
 });

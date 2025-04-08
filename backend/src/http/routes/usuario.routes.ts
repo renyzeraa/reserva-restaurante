@@ -7,6 +7,7 @@ import { verifyJwt } from '../middlewares/verify-jwt'
 import { refresh } from '../controllers/usuario/refresh'
 import { verificaTipoUsuarioLogado } from '../middlewares/verify-type-user'
 import { CONST } from '@/utils/const'
+import { validate } from '../controllers/usuario/validate'
 
 export async function userRoutes(app: FastifyInstance) {
   app.post('/api/v1/usuario', create)
@@ -16,6 +17,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.post('/api/v1/login', authenticate)
 
   app.patch('/api/v1/token/refresh', refresh)
+  app.get('/api/v1/token/validate', validate)
 
   /** autenticado **/
   app.get('/api/v1/usuario/perfil', { onRequest: [verifyJwt, verificaTipoUsuarioLogado(CONST.TIPO_USUARIO.NORMAL)] }, profile)

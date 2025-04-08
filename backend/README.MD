@@ -1,5 +1,19 @@
 # Backend
 
+## ✅ Checklist de Requisitos Funcionais
+
+### 🧠 Backend
+
+- [ ] **Autenticação de usuários** (login)
+- [ ] Lógica para permitir reservas **somente das 18:00 às 23:59**, exceto **aos domingos**
+- [ ] Validação para evitar **conflito de horários** entre reservas
+- [ ] Persistência de dados com banco de dados **relacional**
+- [ ] Endpoints/API para:
+  - [ ] Login
+  - [ ] Criar reserva
+  - [ ] Listar reservas (para painel admin)
+- [ ] Popular o banco de dados com dados de teste (manualmente ou via **seeds/factories**)
+
 ## Para rodar a aplicação localmente
 
 1. Abra o docker, e encerre todos conteiners que estiver ativo;
