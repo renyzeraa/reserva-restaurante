@@ -32,3 +32,10 @@ export const updateReservaSchema = z.object({
 export const checkReservaId = z.object({
   id: z.string().uuid()
 });
+
+export const reservaDateSchema = z.object({
+  data: z.coerce.date().refine((date) => {
+    const diaSemana = date.getDay(); // 0 = Domingo, 6 = Sábado
+    return diaSemana !== 0;
+  }, { message: "Reservas só podem ser feitas entre 18:00 e 23:59, exceto domingos." })
+});

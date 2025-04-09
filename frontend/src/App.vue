@@ -5,7 +5,7 @@
         <router-link :to="{name: 'home'}">Início</router-link>
       </li>
       <div class="right d-flex align-items-center">
-        <li>
+        <li v-if="auth?.user?.admin">
           <router-link :to="{name: 'painel'}">Painel</router-link>
         </li>
         <li>

@@ -43,8 +43,11 @@ export class PrismaReservaPersistence implements ReservaPersistencia {
   }
 
   async findByDate(date: Date): Promise<Reserva[]> {
-    const startOfDay = new Date(date.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
     return await prisma.reserva.findMany({
       where: {
