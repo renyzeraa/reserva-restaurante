@@ -34,7 +34,7 @@
 npm install
 ```
 
-2. Abra o docker, e encerre todos conteiners que estiver ativo;
+2. Abra o docker (recomendo usar docker desktop, se não tiver, baixe), e encerre todos conteiners que estiver ativo;
 3. Com o terminal aberto digite o comando para iniciar o container docker:
 
 ```bash
