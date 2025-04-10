@@ -58,7 +58,7 @@ backend/
 
 ## Para rodar a aplicação localmente
 
-1. Instale as dependencias;
+1.  Abra o terminal dentro da pasta do projeto (./backend) e instale as dependencias;
 
 ```bash
 npm install
@@ -82,7 +82,7 @@ docker-compose down
 docker-compose up -d
 ```
 
-3.1 Confirme se o container reserva-restaurante esta criado
+3.1. Confirme se o container reserva-restaurante esta criado
 
 ```bash
 docker ps
@@ -96,7 +96,7 @@ docker ps
 DATABASE_URL="postgresql://user:docker@localhost:5432/database_name"
 ```
 
-5 Realiza a migração do banco
+5. Realiza a migração do banco
 
 ```bash
 npx prisma migrate dev

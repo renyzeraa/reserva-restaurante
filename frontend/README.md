@@ -44,7 +44,7 @@ frontend/
 
 ## Para rodar a aplicação localmente
 
-1. Instale as dependencias;
+1. Abra o terminal dentro da pasta do projeto (./frontend) e instale as dependencias;
 
 ```bash
 npm install
@@ -56,4 +56,4 @@ npm install
 npm run dev
 ```
 
-2.2 Lembrar de estar com o banco de dados sendo executado, para conseguir realizar o login e demais funcionalidades;
+2.2. Lembrar de estar com o banco de dados sendo executado, para conseguir realizar o login e demais funcionalidades;
