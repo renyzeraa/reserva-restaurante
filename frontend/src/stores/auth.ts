@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
       })
       .catch((error) => {
         // Token inválido
-        console.error('Erro ao validar token:', error);
+        user.value?.admin && console.error('Erro ao validar token:', error);
         clearAuth(); // Limpa a autenticação se o token for inválido
         return false;
       });

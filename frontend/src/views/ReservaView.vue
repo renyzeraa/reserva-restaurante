@@ -93,6 +93,7 @@
               id="modalTime"
               class="form-control"
               v-model="modalTime"
+              @change="validateModalTime"
             />
           </div>
           <div class="modal-footer">
@@ -163,7 +164,7 @@ export default {
         this.setMesasDisponiveis();
         this.isLoading = false;
       } catch (error) {
-        console.error('Erro ao buscar reservas:', error);
+        auth.user.admin && console.error('Erro ao buscar reservas:', error);
         toast('Erro ao buscar mesas.', { type: 'error' });
         this.isLoading = false;
       }
@@ -188,7 +189,7 @@ export default {
         this.setMesasDisponiveis();
         this.isLoading = false;
       } catch (error) {
-        console.error('Erro ao buscar mesas:', error);
+        auth.user.admin && console.error('Erro ao buscar mesas:', error);
         toast('Erro ao buscar mesas.', { type: 'error' });
         this.isLoading = false;
       }
@@ -248,11 +249,16 @@ export default {
             document.getElementById('reservaModal')
           );
           modal.hide();
+          this.modalTime = '';
           this.isLoading = false;
         })
         .catch((error) => {
-          console.error('Erro ao reservar mesa:', error);
-          toast('Erro ao reservar a mesa.', { type: 'error' });
+          auth.user.admin && console.error('Erro ao reservar mesa:', error);
+          if(error?.response?.data?.message){
+            toast(error.response.data.message, { type: 'error' });
+          } else {
+            toast('Erro ao reservar a mesa.', { type: 'error' });
+          }
           this.isLoading = false;
         });
     },
@@ -272,6 +278,15 @@ export default {
       }
       return true;
     },
+    validateModalTime(){
+      const [hours, minutes] = this.modalTime.split(':').map(Number);
+      if (hours < 18 || (hours === 23 && minutes > 59) || hours > 23) {
+        toast('Horário inválido. Reservas são permitidas apenas das 18:00 até as 23:59.', { type: 'warning' });
+        this.modalTime = '';
+        return false;
+      }
+      return true;
+    }
   },
   mounted() {
     this.fetchReservas(); // Busca as reservas ao carregar a página

@@ -9,7 +9,7 @@ export async function forUser(request: FastifyRequest, reply: FastifyReply) {
   try {
     const showForUserReservaUseCase = getShowReservaForUserUseCase();
     const { reservas } = await showForUserReservaUseCase.execute({ usuario_id });
-    return reply.status(200).send({ reservas });
+    return reply.status(200).send({ data: [...reservas] });
   }
   catch (error: Error | unknown) {
     const instanceError = getMessageError(error);

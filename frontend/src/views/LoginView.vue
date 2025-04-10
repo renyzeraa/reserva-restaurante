@@ -138,10 +138,10 @@ export default {
           this.toggleForm();
         }
       } catch (error) {
-        console.error(error.response)
+        auth.user.admin &&  console.error(error.response)
         if (error.response.data.errors) {
           error.response.data.errors.forEach(error => {
-            console.error(error.message)
+            auth.user.admin && console.error(error.message)
             toast(error.message, {
               type: "error"
             })
@@ -150,7 +150,7 @@ export default {
           toast(error.response.data.message, {
             type: "error"
           })
-          console.error(error.response.data.message)
+          auth.user.admin && console.error(error.response.data.message)
         }
       }
     }
