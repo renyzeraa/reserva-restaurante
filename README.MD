@@ -2,7 +2,15 @@
 
 Sistema de reserva para um único restaurante que possui 15 mesas.
 
-Dentro de cada pasta do projeto (backend, frontend) possui o passo a passo para rodar o projeto localmente.
+## Rodar projeto
+
+1. Faça o clone deste projeto:
+
+```bash
+git clone https://github.com/renyzeraa/reserva-restaurante.git
+```
+
+2. Dentro de cada pasta do projeto (backend, frontend) possui o passo a passo para rodar o projeto localmente.
 
 ## Contem
 
@@ -21,3 +29,20 @@ Dentro de cada pasta do projeto (backend, frontend) possui o passo a passo para 
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+
+---
+
+Se você tiver alguma dúvida ou sugestão, entre em contato e sinta-se à vontade para contribuir !
+
+<img align="left" src="https://avatars.githubusercontent.com/renyzeraa?size=100">
+
+Feito por [Renan L. Silva](https://github.com/renyzeraa)! <br>
+🛠 Dev. FullStack <br>
+📍 Santa Catarina - Brasil <br>
+
+<a href="https://www.linkedin.com/in/renyzeraa" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn Badge" height="20"></a>&nbsp;
+<a href="mailto:renansilvaytb@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-D14836?style=flat&logo=gmail&logoColor=white" alt="Gmail Badge" height="20"></a>&nbsp;
+<a href="#"><img src="https://img.shields.io/badge/Discord-%237289DA.svg?logo=discord&logoColor=white" title="renan_s#7826" alt="Discord Badge" height="20"></a>&nbsp;
+<a href="https://www.github.com/renyzeraa" target="_blank"><img src="https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white" alt="GitHub Badge" height="20"></a>&nbsp;
+
+<br clear="left"/>
