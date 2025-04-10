@@ -5,8 +5,8 @@
         <router-link :to="{name: 'home'}">Início</router-link>
       </li>
       <div class="right d-flex align-items-center">
-        <li v-if="auth?.user?.admin">
-          <router-link :to="{name: 'painel'}">Painel</router-link>
+        <li>
+          <router-link :to="{name: 'painel'}">{{ auth?.user?.admin ? 'Painel' : 'Minhas reservas' }}</router-link>
         </li>
         <li>
           <template v-if="auth.isAuthenticated">

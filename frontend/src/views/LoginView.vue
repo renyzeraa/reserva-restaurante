@@ -135,7 +135,7 @@ export default {
           toast("Conta criada, agora realize o login", {
             type: "info"
           })
-          document.querySelector('.btn-login').click()
+          this.toggleForm();
         }
       } catch (error) {
         console.error(error.response)

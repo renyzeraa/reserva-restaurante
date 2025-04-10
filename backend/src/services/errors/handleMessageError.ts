@@ -1,4 +1,5 @@
 import { MesaNotFound } from "./mesa-not-found";
+import { MesaAlreadyReserved } from "./mesaAlreadyReserved";
 import { ReservaNotFound } from "./reserva-not-found";
 import { ResourceNotFound } from "./resource-not-found";
 import { UsuarioEmailExists } from "./user-email-already-exists";
@@ -17,6 +18,12 @@ interface ErrorResponse {
  * @returns 
  */
 export function getMessageError(instance: any): ErrorResponse {
+  if (instance instanceof MesaAlreadyReserved) {
+    return {
+      message: instance.message,
+      statusCode: 401
+    }
+  }
   if (
     instance instanceof UsuarioEmailExists ||
     instance instanceof UsuarioEmailPasswordWrong

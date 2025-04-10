@@ -9,7 +9,7 @@ export async function forDate(request: FastifyRequest, reply: FastifyReply) {
   try {
     const reservaForDateUseCase = getReservaForDateUseCase();
     const { reservas } = await reservaForDateUseCase.execute({ data });
-    return reply.status(200).send({ reservas })
+    return reply.status(200).send({ data: [...reservas] })
   }
   catch (error: Error | unknown) {
     const instanceError = getMessageError(error);

@@ -11,7 +11,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   try {
     const createUseCase = makeCreateReservaUseCase();
     const { reserva } = await createUseCase.execute({ usuario_id, mesa_id, data_reserva });
-    return reply.status(201).send({ message: "Reserva criados com sucesso !" });
+    return reply.status(201).send({ message: "Reserva criada com sucesso!" });
   }
   catch (error: Error | unknown) {
     const instanceError = getMessageError(error);

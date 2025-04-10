@@ -5,7 +5,6 @@ interface reservaForDateUseCaseRequest {
   data: Date
 }
 
-
 interface reservaForDateUseCaseResponse {
   reservas: Reserva[]
 }
