@@ -10,6 +10,14 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/reservas',
+      name: 'reservas',
+      component: () => import('../views/ReservaView.vue'),
+      meta: {
+        auth: true
+      }
+    },
+    {
       path: '/painel',
       name: 'painel',
       component: () => import('../views/PainelView.vue'),
@@ -20,7 +28,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/ReservaView.vue'),
+      component: () => import('../views/HomeView.vue'),
       meta: {
         auth: true
       }

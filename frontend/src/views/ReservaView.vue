@@ -1,67 +1,64 @@
 <template>
   <div class="container my-4">
-    <loading-spinner :isLoading="isLoading" />
-    <h2 class="text-center mb-4">Reservar Mesas</h2>
+    <h2 class="text-center mb-4">Minhas Reservas</h2>
 
-    <div class="mb-4">
-      <label for="date" class="form-label">Selecione uma data:</label>
-      <div class="position-relative">
-        <input
-          type="date"
-          id="date"
-          class="form-control"
-          lang="pt-BR"
-          v-model="selectedDate"
-          @change="fetchReservas"
-        />
-        <img
-          class="position-absolute top-50 translate-middle-y icone-calendario"
-          src="../assets/icon-calendar.svg"
-          alt="Icone calendário"
-        />
-      </div>
-      <span v-if="isSunday" class="text-danger">Reservas não estão disponíveis aos domingos
-      </span>
+    <loading-spinner :isLoading="isLoading" />
+
+    <div v-if="reservas.length === 0" class="text-center text-muted">
+      <p>Você ainda não possui reservas.</p>
     </div>
 
-    <div class="row g-4">
+    <div v-else class="row g-3 overflow-auto reservas-container p-3">
       <div
-        v-for="mesa in mesas"
-        :key="mesa.id"
-        class="col-8 col-md-6 col-lg-3"
+        v-for="reserva in reservas"
+        :key="reserva.id"
+        class="col-12"
       >
-        <div
-          class="mesa-card p-3 gap-2 d-flex align-items-center justify-content-center flex-wrap"
-          @click="!isSunday && openModal(mesa)"
+        <div 
+          class="card shadow-sm"
           :class="[
-            mesa.disponivel && !isSunday ? 'mesa-disponivel' : 'mesa-indisponivel',
-            isSunday ? 'disabled-card' : ''
+            (reserva.status === 'CANCELADA' || reserva.isPast) ? 'card-disabled' : '',
+            reserva.isPast && 'card-passada'
           ]"
         >
-          <span>{{ mesa.nome }}</span>
-          <span
-            class="badge rounded-pill d-block tag-disponibilidade"
-            :class="mesa.disponivel && !isSunday ? 'bg-success' : 'bg-danger'"
-            >{{ mesa.disponivel && !isSunday ? 'Disponível' : 'Indisponível' }}
-            </span>
+          <div 
+            v-if="(reserva.status === 'CANCELADA' || reserva.isPast)" 
+            class="badge-cancelada"
+            :class="{'badge-passada': reserva.isPast }"
+          >
+            {{ reserva.isPast ? 'Reserva passada' : 'Reserva Cancelada'}}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ reserva.mesa.nome }}</h5>
+            <p class="card-text">
+              <strong>Data:</strong> {{ formatDate(reserva.data_reserva) }}<br />
+              <strong>Hora:</strong> {{ formatTime(reserva.data_reserva) }}
+            </p>
+            <button
+              class="btn"
+              :class="{'btn-danger': reserva.status !== 'CANCELADA' && !reserva.isPast}"
+              :disabled="reserva.status === 'CANCELADA'"
+              @click="openDeleteModal(reserva)"
+            >
+              {{ !reserva.isPast ? 'Cancelar reserva' : '✅ Concluída' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal de Confirmação -->
     <div
       class="modal fade"
-      id="reservaModal"
+      id="deleteModal"
       tabindex="-1"
-      aria-labelledby="reservaModalLabel"
+      aria-labelledby="deleteModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="reservaModalLabel">
-              Reservar {{ selectedMesa?.nome }}
-            </h5>
+            <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
             <button
               type="button"
               class="btn-close"
@@ -70,31 +67,7 @@
             ></button>
           </div>
           <div class="modal-body">
-            <label for="modalDate" class="form-label">Data:</label>
-            <div class="position-relative">
-              <input
-                type="date"
-                id="modalDate"
-                class="form-control mb-3"
-                  v-model="modalDate"
-                  @change="validateModalDate"
-                lang="pt-BR"
-              />
-              <img
-                class="position-absolute top-50 translate-middle-y icone-calendario"
-                src="../assets/icon-calendar.svg"
-                alt="Icone calendário"
-              />
-            </div>
-
-            <label for="modalTime" class="form-label">Horário:</label>
-            <input
-              type="time"
-              id="modalTime"
-              class="form-control"
-              v-model="modalTime"
-              @change="validateModalTime"
-            />
+            Tem certeza de que deseja deletar a reserva?
           </div>
           <div class="modal-footer">
             <button
@@ -106,10 +79,10 @@
             </button>
             <button
               type="button"
-              class="btn btn-primary"
-              @click="confirmarReserva"
+              class="btn btn-danger"
+              @click="deleteReserva"
             >
-              Confirmar Reserva
+              Confirmar
             </button>
           </div>
         </div>
@@ -119,232 +92,159 @@
 </template>
 
 <script>
+import api from "@/services/api";
+import LoadingSpinner from "@/components/Loading.vue";
+import {useAuthStore} from "../stores/auth";
 import { toast } from 'vue3-toastify';
-import api from '../services/api';
-import { useAuthStore } from '../stores/auth';
-import LoadingSpinner from "../components/Loading.vue";
 
-const auth = useAuthStore(); 
+const auth = useAuthStore();
 
 export default {
+  name: "PainelView",
   components: {
     LoadingSpinner,
-  },
-  name: 'ReservaView',
-  computed: {
-    isSunday() {
-      const date = new Date(this.selectedDate + 'T00:00:00-03:00');
-      return date.getDay() === 0; // 0 representa domingo
-    },
   },
   data() {
     return {
       reservas: [],
-      mesas: [],
-      selectedDate: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0],
-      selectedMesa: null,
-      modalDate: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0],
-      modalTime: '',
       isLoading: false,
+      reservaSelecionada: null, // Reserva selecionada para exclusão
     };
   },
   methods: {
     async fetchReservas() {
       this.isLoading = true;
       try {
-        const response = await api.get(
-          '/reserva/forDate/' + this.selectedDate,
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`, 
-            },
-          }
-          );
-        this.reservas = response.data.data;
-        this.setMesasDisponiveis();
-        this.isLoading = false;
-      } catch (error) {
-        auth.user.admin && console.error('Erro ao buscar reservas:', error);
-        toast('Erro ao buscar mesas.', { type: 'error' });
-        this.isLoading = false;
-      }
-
-    },
-    // Busca as mesas disponíveis na API
-    async fetchMesas() {
-      this.isLoading = true;
-      try {
-        const response = await api.get(
-          '/mesa', 
-          {
-            params: { date: this.selectedDate },
+        const response = await api.get("/reserva/forUser", {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`, 
-            },
-          }
-        );
-        this.mesas = response.data.data
-        this.setMesasDisponiveis();
-        this.isLoading = false;
+        });
+        this.reservas = response.data.data;
       } catch (error) {
-        auth.user.admin && console.error('Erro ao buscar mesas:', error);
-        toast('Erro ao buscar mesas.', { type: 'error' });
+        console.error("Erro ao buscar reservas:", error);
+      } finally {
         this.isLoading = false;
       }
     },
-    setMesasDisponiveis() {
-      this.mesas = this.mesas.map((mesa) => {
-        mesa.disponivel = true;
-        this.reservas.forEach((reserva) => {
-          if (mesa.id === reserva.mesa_id) {
-            mesa.disponivel = false;
-          }
-        });
-        return mesa;
+    formatDate(dateTime) {
+      const date = new Date(dateTime);
+      return date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
     },
-    // Abre o modal para reservar a mesa
-    openModal(mesa) {
-      if (!mesa.disponivel) {
-        toast('Esta mesa já está reservada!', { type: 'warning' });
-        return;
-      }
-      this.selectedMesa = mesa;
-      const modal = new bootstrap.Modal(document.getElementById('reservaModal'));
-      modal.show();
+    formatTime(dateTime) {
+      const date = new Date(dateTime);
+      return date.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     },
-    // Confirma a reserva da mesa
-    async confirmarReserva() {
-      if (!this.modalTime) {
-        toast('Por favor, selecione um horário.', { type: 'warning' });
-        return;
-      }
-      if (this.isSunday) {
-        toast('Reservas não estão disponíveis aos domingos.', { type: 'warning' });
-        return;
-      }
+    openDeleteModal(reserva) {
+    this.reservaSelecionada = reserva; // Define a reserva selecionada
+    const modal = new bootstrap.Modal(
+      document.getElementById("deleteModal")
+    ); // Inicializa o modal do Bootstrap
+    modal.show(); // Exibe o modal
+  },
+  async deleteReserva() {
+    if (!this.reservaSelecionada) return;
 
+    try {
       this.isLoading = true;
-
-      await api
-        .post('/reserva', 
-          {
-            mesa_id: this.selectedMesa.id,
-            data_reserva: `${this.modalDate}T${this.modalTime}`,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`, 
-            },
-          }
-        )
-        .then(() => {
-          toast(`Mesa ${this.selectedMesa.nome} reservada com sucesso!`, {
-            type: 'success',
-          });
-          this.fetchReservas();
-          const modal = bootstrap.Modal.getInstance(
-            document.getElementById('reservaModal')
-          );
-          modal.hide();
-          this.modalTime = '';
-          this.isLoading = false;
-        })
-        .catch((error) => {
-          auth.user.admin && console.error('Erro ao reservar mesa:', error);
-          if(error?.response?.data?.message){
-            toast(error.response.data.message, { type: 'error' });
-          } else {
-            toast('Erro ao reservar a mesa.', { type: 'error' });
-          }
-          this.isLoading = false;
-        });
-    },
-    validateModalDate() {
-      const selectedDate = new Date(this.modalDate + 'T00:00:00-03:00');
-      const today = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
-      if (selectedDate < new Date(today)) {
-        toast('Data inválida. Selecione uma data futura.', { type: 'warning' });
-        this.modalDate = today;
-        return false;
-      }
-      const date = new Date(this.modalDate + 'T00:00:00-03:00');
-      if (date.getDay() === 0) {
-        toast('Reservas não estão disponíveis aos domingos.', { type: 'warning' });
-        this.modalDate = today;
-        return false;
-      }
-      return true;
-    },
-    validateModalTime(){
-      const [hours, minutes] = this.modalTime.split(':').map(Number);
-      if (hours < 18 || (hours === 23 && minutes > 59) || hours > 23) {
-        toast('Horário inválido. Reservas são permitidas apenas das 18:00 até as 23:59.', { type: 'warning' });
-        this.modalTime = '';
-        return false;
-      }
-      return true;
+      await api.put('/reserva', 
+      {
+        data_reserva: this.reservaSelecionada.data_reserva,
+        id: this.reservaSelecionada.id, 
+        mesa_id: this.reservaSelecionada.mesa_id,
+        status: "CANCELADA",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      this.reservaSelecionada = null;
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("deleteModal")
+      );
+      modal.hide();
+      toast("Reserva deletada com sucesso!", {
+        type: "success",
+      });
+      this.fetchReservas(); // Atualiza a lista de reservas
+    } catch (error) {
+      console.error("Erro ao deletar reserva:", error);
+      toast("Erro ao deletar a reserva.", {
+        type: "error",
+      });
+    } finally {
+      this.isLoading = false;
     }
+  },
   },
   mounted() {
     this.fetchReservas(); // Busca as reservas ao carregar a página
-    this.fetchMesas(); // Busca as mesas ao carregar a página
   },
 };
 </script>
 
 <style scoped>
-.mesa-card {
-  border: 1px solid #ccc;
+.card {
   border-radius: 8px;
-  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background-color: #ddd;
 }
 
-.mesa-card:not(.mesa-indisponivel):hover {
-  transform: scale(1.05);
+.card:hover {
+  transform: scale(1.02);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.disabled-card {
-  background-color: #f5f5f5;
-  color: #aaa;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.mesa-disponivel {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-}
-
-.mesa-indisponivel {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  cursor: not-allowed;
-}
-
-.mesa-card h5 {
-  margin: 0;
+.card-title {
   font-size: 1.25rem;
+  font-weight: bold;
 }
 
-.mesa-card p {
-  margin: 0;
-  font-size: 0.9rem;
+.card-text {
+  font-size: 1rem;
+  color: #555;
 }
 
-.form-control {
-  width: auto;
+.reservas-container {
+  max-height: 80vh;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
 }
 
-.icone-calendario {
-  left: 134px;
+.card-disabled {
   pointer-events: none;
-  width: 20px;
-  height: 20px;
+  cursor: not-allowed;
+  background-color: #e2d8d9;
+}
+
+.card-passada {
+  pointer-events: none;
+  background-color: #d7dee4;
+}
+
+.badge-cancelada {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545; /* Vermelho para indicar cancelamento */
+  color: white;
+  padding: 5px 10px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.badge-passada {
+  background-color: #6c757d; /* Cinza para indicar reserva passada */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

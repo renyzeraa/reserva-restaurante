@@ -26,8 +26,29 @@ export class PrismaReservaPersistence implements ReservaPersistencia {
     })
   }
 
-  async getAll(): Promise<Reserva[]> {
-    return await prisma.reserva.findMany()
+  async getAll(): Promise<(Reserva & { isPast: boolean })[]> {
+    const reservas = await prisma.reserva.findMany({
+      orderBy: {
+        data_reserva: 'asc'
+      },
+      include: {
+        mesa: {
+          select: {
+            nome: true
+          }
+        },
+        usuario: {
+          select: {
+            nome: true
+          }
+        }
+      }
+    })
+
+    return reservas.map(reserva => ({
+      ...reserva,
+      isPast: new Date(reserva.data_reserva) < new Date()
+    }))
   }
 
   async findByMesaAndDateRange(mesa_id: string, inicio: Date, fim: Date): Promise<Reserva | null> {
@@ -69,10 +90,24 @@ export class PrismaReservaPersistence implements ReservaPersistencia {
   }
 
   async getAllForUser(usuario_id: string): Promise<Reserva[] | null> {
-    return await prisma.reserva.findMany({
+    const reservas = await prisma.reserva.findMany({
       where: {
         usuario_id
+      },
+      orderBy: {
+        data_reserva: 'asc'
+      },
+      include: {
+        mesa: {
+          select: {
+            nome: true
+          }
+        }
       }
     });
+    return reservas.map(reserva => ({
+      ...reserva,
+      isPast: new Date(reserva.data_reserva) < new Date()
+    }))
   }
 }

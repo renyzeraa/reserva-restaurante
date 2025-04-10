@@ -1,5 +1,4 @@
 <template>
-
   <div
     class="bg-dark vh-100"
   >
@@ -48,7 +47,7 @@
                     type="password"
                     class="form-control"
                     v-model="confirmPassword"
-                    @input="validatePasswords"
+                    @change="validatePasswords"
                     required
                   />
                   <small v-if="passwordMismatch" class="text-danger">
@@ -92,6 +91,11 @@ export default {
       email: '',
       password: '',
       confirmPassword: ''
+    }
+  },
+  computed: {
+    isAdmin() {
+      return auth.user.admin
     }
   },
   methods: {
@@ -138,10 +142,10 @@ export default {
           this.toggleForm();
         }
       } catch (error) {
-        auth.user.admin &&  console.error(error.response)
+        this.isAdmin &&  console.error(error.response)
         if (error.response.data.errors) {
           error.response.data.errors.forEach(error => {
-            auth.user.admin && console.error(error.message)
+            this.isAdmin && console.error(error.message)
             toast(error.message, {
               type: "error"
             })
@@ -150,7 +154,7 @@ export default {
           toast(error.response.data.message, {
             type: "error"
           })
-          auth.user.admin && console.error(error.response.data.message)
+          this.isAdmin && console.error(error.response.data.message)
         }
       }
     }
