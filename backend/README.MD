@@ -10,6 +10,36 @@
 - PostgresSQL (Sistema de gerenciamento de banco de dados relacional)
 - Fastify (Framework web rápido e eficiente para Node.js)
 
+## 📂 Estrutura
+
+```
+backend/
+├── prisma/                    # Configurações e arquivos do Prisma ORM
+│   ├── migrations/            # Migrações do banco de dados
+│   ├── schema.prisma          # Definição do esquema do banco de dados
+│   └── seed.ts                # Popular banco com 15 mesas
+├── src/
+│   ├── env/                   # Lidar com as variáveis de ambiente
+│   ├── http/                  # Lidar com todas as requisições
+│   │   ├── controllers/       # Controladores para gerenciar as requisições
+│   │   ├── middlewares/       # Middlewares para validações e autenticação
+│   │   ├── routes/            # Definição das rotas da API
+│   │   └── schemas/           # Validação da entrada de dados atraves das requisições
+│   ├── persistence/           # Biblioteca principal de conexão do banco
+│   ├── persistence/           # Lógica com query para request ao banco de dados
+│   ├── services/              # Lógica de negócios e integração com o banco
+│   │   ├── errors/            # Classe para lidar com erros e excessões
+│   │   ├── factories/         # Factories e persistências para criação
+│   │   ├── use_cases/         # Casos de uso relacionados
+│   ├── utils/                 # Funções utilitárias e helpers
+│   ├── index.ts               # Arquivo principal para inicializar o servidor
+│   └── app.ts                 # Configuração do servidor (Fastify, middlewares, etc.)
+├── .env.example               # Exemplo de variáveis de ambiente
+├── docker-compose.yml         # Configuração do Docker para o backend
+├── package.json               # Dependências e scripts do backend
+└── tsconfig.json              # Configuração do TypeScript
+```
+
 ## ✅ Checklist de Requisitos Funcionais
 
 ### 🧠 Backend

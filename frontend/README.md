@@ -10,6 +10,25 @@
 - Toast (para notificações)
 - Js-Cookie (lidar com dados no cookies do navegador)
 
+## 📂 Estrutura
+
+```
+frontend/
+├── src/
+│   ├── assets/                # imagens e icones usados
+│   ├── components/            # Componentes usados nas views
+│   ├── router/                # Definição das rotas de navegação na página
+│   ├── services/              # Integração com a API
+│   ├── store/                 # Lógica de autenticação do usuário e token JWT
+│   ├── views/                 # Páginas que contem na aplicação
+│   ├── App.vue                # Arquivo base com as rotas e a visualização das páginas
+│   ├── main.ts                # Cria a página iniciando o vue
+│   └── style.css              # Estilos base
+├── index.html
+├── package.json               # Dependências e scripts do frontend
+└── tsconfig.json              # Configuração do TypeScript
+```
+
 ## ✅ Checklist de Requisitos Funcionais
 
 ### 🖥️ Frontend
