@@ -37,4 +37,4 @@ npm install
 npm run dev
 ```
 
-2.2 Lembrar de estar com o banco de dados sendo executado
+2.2 Lembrar de estar com o banco de dados sendo executado, para conseguir realizar o login e demais funcionalidades;

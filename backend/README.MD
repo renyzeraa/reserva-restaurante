@@ -34,38 +34,63 @@
 npm install
 ```
 
-2. Abra o docker (recomendo usar docker desktop, se não tiver, baixe), e encerre todos conteiners que estiver ativo;
-3. Com o terminal aberto digite o comando para iniciar o container docker:
+Obs: Caso ja tenha o container listado no seu docker, apenas inicie ele e pule pro passo 5:
 
 ```bash
 docker start reserva-restaurante
 ```
 
-3.1 Realiza a migração do banco
+2. Abra o docker (recomendo usar docker desktop, se não tiver, baixe), e encerre todos conteiners que estiver ativo;
 
 ```bash
-npx prisma migrate
+docker-compose down
 ```
 
-4. Abra outro terminal para iniciar o banco de dados;
+3. Com o terminal aberto (dentro do diretorio ./backend aqui do projeto) digite o comando para iniciar o container docker:
+
+```bash
+docker-compose up -d
+```
+
+3.1 Confirme se o container reserva-restaurante esta criado
+
+```bash
+docker ps
+```
+
+![Image](https://github.com/user-attachments/assets/f5f2a6a4-f2c2-4b6b-a2a4-dba8b4ad2f99)
+
+4. Confirme a conexão com o banco de dados com arquivo .env (crie o arquivo) e aplique conforme o exemplo .env.example
+
+```bash
+DATABASE_URL="postgresql://user:docker@localhost:5432/database_name"
+```
+
+5 Realiza a migração do banco
+
+```bash
+npx prisma migrate dev
+```
+
+6. Iniciar o backend;
 
 ```bash
 npm run dev
 ```
 
-5. Abra outro terminal para criar as mesas caso não tenha nenhuma cadastrada
+7. Abra outro terminal para criar as mesas caso não tenha nenhuma cadastrada
    **Insere no banco 15 mesas**
 
 ```bash
 npm run seed
 ```
 
-6. Caso queira ver o banco de dados online
+8. Caso queira ver o banco de dados online
 
 ```bash
 npx prisma studio
 ```
 
-7. Caso deseja apenas testar as rotas com requisições pelo Postman, na raiz deste projeto possui o arquivo ''reserva-restaurante-collection.json'' onde contem toda collection necessaria.
+9. Caso deseja apenas testar as rotas com requisições pelo Postman, na raiz deste projeto possui o arquivo ''Reserva_Restaurante_collection.json'' onde contem toda collection necessaria.
 
-Obs: Localmente o banco roda no localhost:3333, o docker no localhost:5432, se atende para que antes de rodar o projeto, essas portas estejam livres.
+Obs: Localmente o banco roda no localhost:3333, o docker no localhost:5432, se atente para que antes de rodar o projeto, essas portas estejam livres.
