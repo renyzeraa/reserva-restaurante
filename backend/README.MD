@@ -123,4 +123,7 @@ npx prisma studio
 
 9. Caso deseja apenas testar as rotas com requisições pelo Postman, na raiz deste projeto possui o arquivo ''Reserva_Restaurante_collection.json'' onde contem toda collection necessaria.
 
+10. Para acessar as telas de admin, utilize a collection no postman ou insomnia, realize o login do seu user, e na rota USUARIO-UPDATE (PUT), use neste formato de json:
+    ![Image](https://github.com/user-attachments/assets/6a13b9be-6330-4608-981a-e58e5470b1ab)
+
 Obs: Localmente o banco roda no localhost:3333, o docker no localhost:5432, se atente para que antes de rodar o projeto, essas portas estejam livres.
