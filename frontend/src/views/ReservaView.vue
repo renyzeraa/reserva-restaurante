@@ -214,7 +214,7 @@ export default {
 
 .reservas-container {
   max-height: 80vh;
-  overflow-y: scroll !important;
+  overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
