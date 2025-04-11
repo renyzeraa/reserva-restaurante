@@ -247,7 +247,7 @@ export default {
           }
         )
         .then(() => {
-          toast(`Mesa ${this.selectedMesa.nome} reservada com sucesso!`, {
+          toast(`${this.selectedMesa.nome} reservada com sucesso!`, {
             type: 'success',
           });
           this.fetchReservas();
