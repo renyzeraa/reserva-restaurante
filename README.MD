@@ -30,6 +30,24 @@ git clone https://github.com/renyzeraa/reserva-restaurante.git
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 
+## Telas
+
+### Login
+
+![Image](https://github.com/user-attachments/assets/fe4f582b-8a81-4fe0-b75d-e966d8d49d38)
+
+### Home
+
+![Image](https://github.com/user-attachments/assets/9b02d86c-e542-492f-8d32-47dc7b0762c5)
+
+### Fazer uma reserva
+
+![Image](https://github.com/user-attachments/assets/aadb9c7d-fbce-4d3b-b565-cdad65d58dbd)
+
+### Ver minhas reservas
+
+![Image](https://github.com/user-attachments/assets/30cbe313-8658-47a8-8995-7a7f9de21a6b)
+
 ---
 
 Se você tiver alguma dúvida ou sugestão, entre em contato e sinta-se à vontade para contribuir !
